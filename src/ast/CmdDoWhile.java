@@ -47,7 +47,7 @@ public class CmdDoWhile extends AbstractCommand {
         for (AbstractCommand cmd : comandos) {
             code.append(cmd.generateCode());
         }
-        code.append("} while (").append(expr.toString()).append(");\n");
+        code.append("} while(").append(expr.toString()).append(");\n");
         return code.toString();
     }
 

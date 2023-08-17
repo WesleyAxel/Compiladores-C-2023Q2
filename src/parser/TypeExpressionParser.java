@@ -1082,6 +1082,11 @@ public class TypeExpressionParser extends Parser {
 			setState(158);
 			match(T__10);
 
+								stack.push(new ArrayList<AbstractCommand>());
+							BinaryExpression _relExpr = new BinaryExpression();				
+							CmdDoWhile _CmdDoWhile = new CmdDoWhile();
+
+								
 			setState(160);
 			match(ACO);
 			setState(162); 
@@ -1103,9 +1108,7 @@ public class TypeExpressionParser extends Parser {
 			setState(167);
 			match(T__9);
 
-							stack.push(new ArrayList<AbstractCommand>());
-							BinaryExpression _relExpr = new BinaryExpression();				
-							CmdDoWhile _CmdDoWhile = new CmdDoWhile();
+							
 							
 			setState(169);
 			match(AP);

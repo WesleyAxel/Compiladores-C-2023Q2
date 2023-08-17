@@ -190,14 +190,11 @@ cmdWhile  : 'while' {
 		  ;
 		  
 cmdDoWhile  : 'do' {
-					// FAZER O CÓDIGO DE IMPRIMIR COMANDOS
-
+					stack.push(new ArrayList<AbstractCommand>());
+					BinaryExpression _relExpr = new BinaryExpression();				
+					CmdDoWhile _CmdDoWhile = new CmdDoWhile();
 					} ACO (cmd)+ FCO
-			  'while' {
-				stack.push(new ArrayList<AbstractCommand>());
-				BinaryExpression _relExpr = new BinaryExpression();				
-				CmdDoWhile _CmdDoWhile = new CmdDoWhile();
-				} 
+			  'while'
 			AP expr {
 				_relExpr.setLeftSide(expression);
 			}

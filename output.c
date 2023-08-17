@@ -19,6 +19,9 @@ else {
 scanf("%d" , &b);
 }
 }
+do {
+scanf("%d" , &b);
+} while(1<10);
 printf("C e igual a ");
 printf("%d", c);
 scanf("%d" , &b);

@@ -20,6 +20,10 @@ programa
 		}
 	}
 	
+	do{
+		leia (b).
+	}while(1<10).
+	
 	escreva ("C e igual a ").
 	escreva (c).
 	
