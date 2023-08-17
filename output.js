@@ -14,6 +14,9 @@ if (1>1) {
 else {
 scanf("%d" , &b);
 }
+while (1<10) {
+printf("1");
+}
 printf("C e igual a ");
 printf("%d", c);
 scanf("%d" , &b);

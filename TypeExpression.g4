@@ -83,7 +83,7 @@ lista_var : ID  {
 			  }
    		  ;
    		  
-cmd		  : cmdAttr | cmdRead | cmdWrite | cmdIf
+cmd		  : cmdAttr | cmdRead | cmdWrite | cmdIf | cmdWhile
 		  ;
 		  
 cmdIf     : 'if' {
@@ -160,14 +160,35 @@ cmdAttr   : ID {
 					id.setValue(expression.eval());
 					symbolTable.add(idAtribuido, id);
 					
-					//System.out.println("EVAL ("+expression+") = "+expression.eval());
+					System.out.println("EVAL ("+expression+") = "+expression.eval());
 					
 					CmdAttrib _attr = new CmdAttrib(id, expression);
 					stack.peek().add(_attr);
 					expression = null;					
 				}
-		  ;   		  
+		  ;
 		  
+cmdWhile  : 'while' {
+				stack.push(new ArrayList<AbstractCommand>());
+				BinaryExpression _relExpr = new BinaryExpression();				
+				CmdWhile _CmdWhile = new CmdWhile();
+			} 
+			AP expr {
+				_relExpr.setLeftSide(expression);
+			}
+			OPREL {
+				_relExpr.setOperator(_input.LT(-1).getText().charAt(0));
+			} 
+			expr {
+				_relExpr.setRightSide(expression);
+				_CmdWhile.setExpr(_relExpr);
+				
+			} FP ACO cmd+ {
+				_CmdWhile.setComandos(stack.pop());
+				stack.peek().add(_CmdWhile);
+			} FCO   		  
+		  ;
+		 
 expr	  : termo exprl*
           ;
           
