@@ -7,21 +7,18 @@ programa
 	escreva ("Digite B").
 	leia (b).
 	
-	if(1>=1){
-	 	leia (b).
-	}else{
- 	 	leia (b).
-	}
+	
 	
 	while(1<10){
-		escreva("1").
+		if(1>=1){
+	 		leia (b).
+	 		while(1<10){
+	 			leia (c).
+	 		}
+		}else{
+	 	 	leia (b).
+		}
 	}
-	
-	do{
-		escreva("10").
-	}
-	while(1<5).
-	
 	
 	escreva ("C e igual a ").
 	escreva (c).

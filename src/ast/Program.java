@@ -14,7 +14,7 @@ public class Program {
 	private SymbolTable symbolTable;
 
 	public Program() {
-		this.filename = "output.js";
+		this.filename = "output.c";
 		this.comandos = new ArrayList<AbstractCommand>();
 	}
 

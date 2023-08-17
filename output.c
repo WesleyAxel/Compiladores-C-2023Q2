@@ -8,18 +8,17 @@ printf("Digite A");
 scanf("%d" , &a);
 printf("Digite B");
 scanf("%d" , &b);
+while (1<10) {
 if (1>1) {
  scanf("%d" , &b);
+while (1<10) {
+scanf("%d" , &c);
+}
 }
 else {
 scanf("%d" , &b);
 }
-while (1<10) {
-printf("1");
 }
-printf("10");
-do {
-} while (1<5);
 printf("C e igual a ");
 printf("%d", c);
 scanf("%d" , &b);
