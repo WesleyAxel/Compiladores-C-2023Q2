@@ -183,18 +183,21 @@ cmdWhile  : 'while' {
 				_relExpr.setRightSide(expression);
 				_CmdWhile.setExpr(_relExpr);
 				
-			} FP ACO cmd+ {
+			} FP ACO (cmd)+ {
 				_CmdWhile.setComandos(stack.pop());
 				stack.peek().add(_CmdWhile);
 			} FCO		  
 		  ;
 		  
-cmdDoWhile  : 'do' ACO cmd+ FCO
-				'while' {
+cmdDoWhile  : 'do' {
+					// FAZER O CÓDIGO DE IMPRIMIR COMANDOS
+
+					} ACO (cmd)+ FCO
+			  'while' {
 				stack.push(new ArrayList<AbstractCommand>());
 				BinaryExpression _relExpr = new BinaryExpression();				
-				CmdWhile _CmdWhile = new CmdWhile();
-			} 
+				CmdDoWhile _CmdDoWhile = new CmdDoWhile();
+				} 
 			AP expr {
 				_relExpr.setLeftSide(expression);
 			}
@@ -203,11 +206,11 @@ cmdDoWhile  : 'do' ACO cmd+ FCO
 			} 
 			expr {
 				_relExpr.setRightSide(expression);
-				_CmdWhile.setExpr(_relExpr);
+				_CmdDoWhile.setExpr(_relExpr);
 				
 			} FP {
-				_CmdWhile.setComandos(stack.pop());
-				stack.peek().add(_CmdWhile);
+				_CmdDoWhile.setComandos(stack.pop());
+				stack.peek().add(_CmdDoWhile);
 			} PF
 		  ;		  
 		  
