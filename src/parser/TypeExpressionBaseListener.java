@@ -172,6 +172,18 @@ public class TypeExpressionBaseListener implements TypeExpressionListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterCmdDoWhile(TypeExpressionParser.CmdDoWhileContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCmdDoWhile(TypeExpressionParser.CmdDoWhileContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterExpr(TypeExpressionParser.ExprContext ctx) { }
 	/**
 	 * {@inheritDoc}

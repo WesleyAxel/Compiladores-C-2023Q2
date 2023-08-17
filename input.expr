@@ -17,6 +17,12 @@ programa
 		escreva("1").
 	}
 	
+	do{
+		escreva("10").
+	}
+	while(1<5).
+	
+	
 	escreva ("C e igual a ").
 	escreva (c).
 	

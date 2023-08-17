@@ -139,6 +139,16 @@ public interface TypeExpressionListener extends ParseTreeListener {
 	 */
 	void exitCmdWhile(TypeExpressionParser.CmdWhileContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link TypeExpressionParser#cmdDoWhile}.
+	 * @param ctx the parse tree
+	 */
+	void enterCmdDoWhile(TypeExpressionParser.CmdDoWhileContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TypeExpressionParser#cmdDoWhile}.
+	 * @param ctx the parse tree
+	 */
+	void exitCmdDoWhile(TypeExpressionParser.CmdDoWhileContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link TypeExpressionParser#expr}.
 	 * @param ctx the parse tree
 	 */
