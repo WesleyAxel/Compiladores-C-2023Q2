@@ -112,7 +112,7 @@ public class TypeExpressionParser extends Parser {
 		private SymbolTable symbolTable = new SymbolTable();
 		private DataType currentType;
 		private AbstractExpression expression;
-		private char operator;
+		private String operator;
 		private DataType leftDT;
 		private DataType rightDT;
 		private String   idAtribuido;
@@ -649,7 +649,7 @@ public class TypeExpressionParser extends Parser {
 			setState(87);
 			match(OPREL);
 
-							_relExpr.setOperator(_input.LT(-1).getText().charAt(0));
+							_relExpr.setOperator(_input.LT(-1).getText());
 						
 			setState(89);
 			expr();
@@ -993,7 +993,7 @@ public class TypeExpressionParser extends Parser {
 			setState(144);
 			match(OPREL);
 
-							_relExpr.setOperator(_input.LT(-1).getText().charAt(0));
+							_relExpr.setOperator(_input.LT(-1).getText());
 						
 			setState(146);
 			expr();
@@ -1117,7 +1117,8 @@ public class TypeExpressionParser extends Parser {
 			setState(171);
 			match(OPREL);
 
-							_relExpr.setOperator(_input.LT(-1).getText().charAt(0));
+							String text = _input.LT(-1).getText();
+						    _relExpr.setOperator(text);
 						
 			setState(173);
 			expr();
@@ -1323,7 +1324,7 @@ public class TypeExpressionParser extends Parser {
 				consume();
 			}
 			 
-							operator = _input.LT(-1).getText().charAt(0);
+							operator = _input.LT(-1).getText();
 							BinaryExpression _exprADD = new BinaryExpression(operator);
 							_exprADD.setLeftSide(expression);
 						

@@ -8,8 +8,8 @@ printf("Digite A");
 scanf("%d" , &a);
 printf("Digite B");
 scanf("%d" , &b);
-while (0<10) {
-if (1>1) {
+while (1>=10) {
+if (1>=1) {
  scanf("%d" , &b);
 while (1<10) {
 scanf("%d" , &c);

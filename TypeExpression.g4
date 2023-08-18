@@ -16,7 +16,7 @@ grammar TypeExpression;
 	private SymbolTable symbolTable = new SymbolTable();
 	private DataType currentType;
 	private AbstractExpression expression;
-	private char operator;
+	private String operator;
 	private DataType leftDT;
 	private DataType rightDT;
 	private String   idAtribuido;
@@ -95,7 +95,7 @@ cmdIf     : 'if' {
 				_relExpr.setLeftSide(expression);
 			}
 			OPREL {
-				_relExpr.setOperator(_input.LT(-1).getText().charAt(0));
+				_relExpr.setOperator(_input.LT(-1).getText());
 			} 
 			expr {
 				_relExpr.setRightSide(expression);
@@ -178,7 +178,7 @@ cmdWhile  : 'while' {
 				_relExpr.setLeftSide(expression);
 			}
 			OPREL {
-				_relExpr.setOperator(_input.LT(-1).getText().charAt(0));
+				_relExpr.setOperator(_input.LT(-1).getText());
 			} 
 			expr {
 				_relExpr.setRightSide(expression);
@@ -200,7 +200,8 @@ cmdDoWhile  : 'do' {
 				_relExpr.setLeftSide(expression);
 			}
 			OPREL {
-				_relExpr.setOperator(_input.LT(-1).getText().charAt(0));
+				String text = _input.LT(-1).getText();
+			    _relExpr.setOperator(text);
 			} 
 			expr {
 				_relExpr.setRightSide(expression);
@@ -241,7 +242,7 @@ termo     : NUMBER
 		  ;
 		  
 exprl     : (SUM | SUB | MUL | DIV) { 
-				operator = _input.LT(-1).getText().charAt(0);
+				operator = _input.LT(-1).getText();
 				BinaryExpression _exprADD = new BinaryExpression(operator);
 				_exprADD.setLeftSide(expression);
 			} 
@@ -274,7 +275,7 @@ MUL		  : '*'
 DIV		  : '/'
 		  ;
           
-OPREL     : '>' | '>=' | '<' | '<=' | '==' | '!='
+OPREL     : '>' | '>=' | '<' | '<=' | '==' | '!=' 
  		  ;          
    		  
 ID		  : ([a-z]|[A-Z]) ([a-z]|[A-Z]|[0-9])*

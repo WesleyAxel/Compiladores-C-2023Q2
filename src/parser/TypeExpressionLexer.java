@@ -103,7 +103,7 @@ public class TypeExpressionLexer extends Lexer {
 		private SymbolTable symbolTable = new SymbolTable();
 		private DataType currentType;
 		private AbstractExpression expression;
-		private char operator;
+		private String operator;
 		private DataType leftDT;
 		private DataType rightDT;
 		private String   idAtribuido;

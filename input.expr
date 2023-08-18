@@ -6,7 +6,7 @@ programa
 	leia (a).
 	escreva ("Digite B").
 	leia (b).	
-	while(f<10){
+	while(1>=10){
 		if(1>=1){
 	 		leia (b).
 	 		while(1<10){
