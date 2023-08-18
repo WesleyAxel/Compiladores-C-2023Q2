@@ -658,7 +658,6 @@ public class TypeExpressionParser extends Parser {
 			expr();
 
 							_relExpr.setLeftSide(expression);
-							//leftDT = expression.getType(); 
 						
 			setState(90);
 			match(OPREL);
@@ -669,7 +668,6 @@ public class TypeExpressionParser extends Parser {
 			expr();
 
 							_relExpr.setRightSide(expression);
-							//rightDT = expression.getType(); 
 							if (leftDT != rightDT) {
 			                    throw new RuntimeException("Semantic ERROR - Type Mismatching: " + leftDT + " - " + rightDT);
 			                }
@@ -1261,6 +1259,7 @@ public class TypeExpressionParser extends Parser {
 				match(NUMBER);
 
 								expression = new NumberExpression(Integer.parseInt(_input.LT(-1).getText()));
+								rightDT = DataType.INTEGER; 
 							
 				}
 				break;
@@ -1271,6 +1270,7 @@ public class TypeExpressionParser extends Parser {
 				match(REAL);
 
 								expression = new RealExpression(Double.parseDouble(_input.LT(-1).getText()));
+								rightDT = DataType.REAL; 
 							
 				}
 				break;
@@ -1281,6 +1281,7 @@ public class TypeExpressionParser extends Parser {
 				match(TEXT);
 
 						  		expression = new StringExpression(_input.LT(-1).getText());
+						  		rightDT = DataType.STRING; 
 						  	
 				}
 				break;

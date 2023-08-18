@@ -94,14 +94,12 @@ cmdIf     : 'if' {
 			} 
 			AP expr {
 				_relExpr.setLeftSide(expression);
-				//leftDT = expression.getType(); 
 			}
 			OPREL {
 				_relExpr.setOperator(_input.LT(-1).getText());
 			} 
 			expr {
 				_relExpr.setRightSide(expression);
-				//rightDT = expression.getType(); 
 				if (leftDT != rightDT) {
                     throw new RuntimeException("Semantic ERROR - Type Mismatching: " + leftDT + " - " + rightDT);
                 }
@@ -226,14 +224,17 @@ expr	  : termo exprl*
 termo     :  NUMBER 
 			{
 				expression = new NumberExpression(Integer.parseInt(_input.LT(-1).getText()));
+				rightDT = DataType.INTEGER; 
 			}
 			| REAL
 			{
 				expression = new RealExpression(Double.parseDouble(_input.LT(-1).getText()));
+				rightDT = DataType.REAL; 
 			}
 		  	| TEXT
 		  	{
 		  		expression = new StringExpression(_input.LT(-1).getText());
+		  		rightDT = DataType.STRING; 
 		  	}
 			| ID {
 				if (!symbolTable.exists(_input.LT(-1).getText())){
