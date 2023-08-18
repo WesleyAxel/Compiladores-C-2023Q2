@@ -2,5 +2,6 @@ package symbols;
 
 public enum DataType {
 	INTEGER,
-	REAL
+	REAL,
+	STRING
 }

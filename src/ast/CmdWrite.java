@@ -2,20 +2,24 @@ package ast;
 
 import javax.swing.JOptionPane;
 
+import symbols.DataType;
 import symbols.Identifier;
 
 public class CmdWrite extends AbstractCommand{
 	
 	private Identifier id;
 	private String text;
+	private DataType dataType;
+
 	
 	public CmdWrite() {
 		super();
 	}
 	
-	public CmdWrite(Identifier id) {
+	public CmdWrite(Identifier id,DataType dataType) {
 		super();
 		this.id = id;
+		this.dataType = dataType;
 	}
 	
 
@@ -26,12 +30,25 @@ public class CmdWrite extends AbstractCommand{
 
 	@Override
 	public String generateCode() {
-		// TODO Auto-generated method stub
 		if (id != null) {
-            return "printf(\"%d\", " + id.getText() + ");\n";
-        } else {
-            return "printf(" + text + ");\n";
-        }
+			String tipoFormato;
+			switch (dataType) {
+				case INTEGER:
+					tipoFormato = "%d";
+					break;
+				case REAL:
+					tipoFormato = "%f";
+					break;
+				case STRING:
+					tipoFormato = "%s";
+					break;
+				default:
+					tipoFormato = "";
+			}
+			return "printf(\"" + tipoFormato + "\", " + id.getText() + ");\n";
+		} else {
+			return "printf(" + text + ");\n";
+		}
 	}
 
 	public Identifier getId() {

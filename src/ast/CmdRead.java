@@ -2,15 +2,18 @@ package ast;
 
 import javax.swing.JOptionPane;
 
+import symbols.DataType;
 import symbols.Identifier;
 
 public class CmdRead extends AbstractCommand{
 	
 	private Identifier id;
+	private DataType dataType;
 	
-	public CmdRead(Identifier id) {
+	public CmdRead(Identifier id, DataType dataType) {
 		super();
 		this.id = id;
+		this.dataType = dataType;
 	}
 	public CmdRead() {
 		super();
@@ -19,8 +22,21 @@ public class CmdRead extends AbstractCommand{
 
 	@Override
 	public String generateCode() {
-		// TODO Auto-generated method stub
-		return ("scanf(" + "\"%d\" , &" + id.getText() + ");\n");
+		String tipoFormato;
+		switch (dataType) {
+			case INTEGER:
+				tipoFormato = "%d";
+				break;
+			case REAL:
+				tipoFormato = "%f";
+				break;
+			case STRING:
+				tipoFormato = "%s";
+				break;
+			default:
+				tipoFormato = "";
+		}
+		return "scanf(\"" + tipoFormato + "\", &" + id.getText() + ");\n";
 	}
 	@Override
 	public void run() {

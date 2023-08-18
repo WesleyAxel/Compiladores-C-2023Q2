@@ -59,11 +59,12 @@ fim       : 'fimprog.' {
 							}
           ;
 		  
-decl	  : 'declare' lista_var PF
+decl	  : 'declare' tipo lista_var PF
 		  ;
 		 
-tipo	  : 'INTEGER' { currentType = DataType.INTEGER; }
-          | 'REAL'    { currentType = DataType.REAL; }
+tipo	  : 'INTEGER' 			{ currentType = DataType.INTEGER; }
+          | 'REAL'    			{ currentType = DataType.REAL; }
+          | 'STRING'			{ currentType = DataType.STRING;}
           ;
          
 lista_var : ID  { 
@@ -78,7 +79,7 @@ lista_var : ID  {
    
            		}
            )* {
-           		CmdDeclare _CmdDeclare = new CmdDeclare(listaID);
+           		CmdDeclare _CmdDeclare = new CmdDeclare(listaID,currentType);
 				stack.peek().add(_CmdDeclare);
 			  }
    		  ;
@@ -122,7 +123,8 @@ cmdRead   : 'leia' AP ID {
 					throw new RuntimeException("Undeclared Variable");
 				}
 				id.setValue(0);
-				CmdRead _read = new CmdRead(id);
+				DataType dataType = id.getType();
+				CmdRead _read = new CmdRead(id,dataType);
 				stack.peek().add(_read);
 			 }
 			 FP PF
@@ -134,7 +136,8 @@ cmdWrite  : 'escreva' AP (
 	         	if (id == null){
 	         		throw new RuntimeException("Undeclared Variable");	         		
 	         	}
-	         	CmdWrite _write = new CmdWrite(id);
+	         	DataType dataType = id.getType();
+	         	CmdWrite _write = new CmdWrite(id,dataType);
 	         	stack.peek().add(_write);
 	         } 
 	         | 
