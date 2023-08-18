@@ -1,12 +1,14 @@
 programa
 
-	declare REAL a,b,c,d.
+	declare INTEGER a,b,c,d.
+	declare REAL f.
 	escreva("Programa Teste").
 	escreva ("Digite A").
 	leia (a).
 	escreva ("Digite B").
 	leia (b).	
-	while(1>=10){
+	a:=1.
+	while(a>="teste"){
 		if(1>=1){
 	 		leia (b).
 	 		while(1<10){

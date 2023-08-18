@@ -94,14 +94,18 @@ cmdIf     : 'if' {
 			} 
 			AP expr {
 				_relExpr.setLeftSide(expression);
+				//leftDT = expression.getType(); 
 			}
 			OPREL {
 				_relExpr.setOperator(_input.LT(-1).getText());
 			} 
 			expr {
 				_relExpr.setRightSide(expression);
+				//rightDT = expression.getType(); 
+				if (leftDT != rightDT) {
+                    throw new RuntimeException("Semantic ERROR - Type Mismatching: " + leftDT + " - " + rightDT);
+                }
 				_cmdIf.setExpr(_relExpr);
-				
 			} FP ACO cmd+  
 			{
 				_cmdIf.setListaTrue(stack.pop());
@@ -122,7 +126,6 @@ cmdRead   : 'leia' AP ID {
 				if (id == null){
 					throw new RuntimeException("Undeclared Variable");
 				}
-				id.setValue(0);
 				DataType dataType = id.getType();
 				CmdRead _read = new CmdRead(id,dataType);
 				stack.peek().add(_read);
@@ -156,7 +159,7 @@ cmdAttr   : ID {
 				}
 				leftDT = symbolTable.get(_input.LT(-1).getText()).getType();
 				rightDT = null;
-			}
+				}
          	ATTR expr PF
 				{
 					// logica para atribuir o valor da expressao no identificador
@@ -220,12 +223,19 @@ cmdDoWhile  : 'do' {
 expr	  : termo exprl*
           ;
           
-termo     : NUMBER 
+termo     :  NUMBER 
 			{
 				expression = new NumberExpression(Integer.parseInt(_input.LT(-1).getText()));
 			}
-		  |
-			ID {
+			| REAL
+			{
+				expression = new RealExpression(Double.parseDouble(_input.LT(-1).getText()));
+			}
+		  	| TEXT
+		  	{
+		  		expression = new StringExpression(_input.LT(-1).getText());
+		  	}
+			| ID {
 				if (!symbolTable.exists(_input.LT(-1).getText())){
 					throw new RuntimeException("Semantic ERROR - Undeclared Identifier: "+_input.LT(-1).getText());
 				}
@@ -236,7 +246,13 @@ termo     : NUMBER
 				
 				Identifier id = symbolTable.get(_input.LT(-1).getText());
 				if (id.getValue() != null){
-					expression = new NumberExpression(id.getValue());
+					if 		  (rightDT == DataType.INTEGER) {
+						expression = new NumberExpression(id.getValue());
+					} else if (rightDT == DataType.REAL) {
+						expression = new RealExpression(id.getValue());
+					} else if (rightDT == DataType.STRING) {
+						expression = new StringExpression(id.getValue());
+					}
 				}
 				else{
 					throw new RuntimeException("Semantic ERROR - Unassigned variable");
@@ -253,11 +269,13 @@ exprl     : (SUM | SUB | MUL | DIV) {
 			{
 				_exprADD.setRightSide(expression);
 				expression = _exprADD;
-				
 			}
           ;		         
 		  
 NUMBER	  : [0-9]+
+		  ;
+		  
+REAL	  : [0-9]+('.'[0-9]+)?
 		  ;
 		  
 TEXT 	  : '"' ([a-z]|[A-Z]|[0-9]|' '|'\t'|'!'|'-')* '"'

@@ -3,7 +3,7 @@ package symbols;
 public class Identifier {
 	private String text;
 	private DataType type;
-	private Integer  value;
+	private Object  value;
 
 	public String getText() {
 		return text;
@@ -36,7 +36,7 @@ public class Identifier {
 		return "Identifier [text=" + text + ", type=" + type + ", value=" + value + "]";
 	}
 
-	public Integer getValue() {
+	public Object getValue() {
 		return value;
 	}
 

@@ -4,9 +4,9 @@ public class NumberExpression extends AbstractExpression{
 	
 	private int numberValue;
 	
-	public NumberExpression(int numberValue) {
+	public NumberExpression(Object object) {
 		super();
-		this.numberValue = numberValue;
+		this.numberValue = (int) object;
 	}
 	
 
