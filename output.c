@@ -10,7 +10,7 @@ scanf("%d", &a);
 printf("Digite B");
 scanf("%d", &b);
 a=1;
-while (1>=1.1) {
+while (1>=1) {
 if (1>=1) {
  scanf("%d", &b);
 while (1<10) {

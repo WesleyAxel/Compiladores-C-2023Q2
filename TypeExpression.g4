@@ -186,6 +186,9 @@ cmdWhile  : 'while' {
 			} 
 			expr {
 				_relExpr.setRightSide(expression);
+				if (leftDT != rightDT) {
+                    throw new RuntimeException("Semantic ERROR - Type Mismatching: " + leftDT + " - " + rightDT);
+                }
 				_CmdWhile.setExpr(_relExpr);
 				
 			} FP ACO (cmd)+ {
@@ -209,6 +212,9 @@ cmdDoWhile  : 'do' {
 			} 
 			expr {
 				_relExpr.setRightSide(expression);
+				if (leftDT != rightDT) {
+                    throw new RuntimeException("Semantic ERROR - Type Mismatching: " + leftDT + " - " + rightDT);
+                }
 				_CmdDoWhile.setExpr(_relExpr);
 				
 			} FP {

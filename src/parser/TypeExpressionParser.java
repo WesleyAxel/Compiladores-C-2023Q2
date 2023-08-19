@@ -1015,6 +1015,9 @@ public class TypeExpressionParser extends Parser {
 			expr();
 
 							_relExpr.setRightSide(expression);
+							if (leftDT != rightDT) {
+			                    throw new RuntimeException("Semantic ERROR - Type Mismatching: " + leftDT + " - " + rightDT);
+			                }
 							_CmdWhile.setExpr(_relExpr);
 							
 						
