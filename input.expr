@@ -1,34 +1,8 @@
 programa
 
-	declare INTEGER a,b,c,d.
-	declare STRING 5 f,v.
-	escreva("Programa Teste").
-	escreva ("Digite A").
-	leia (a).
-	escreva ("Digite B").
-	leia (b).	
-	a:=1.
-	while(1>=a){
-		if(a>=1){
-	 		leia (b).
-	 		while(1<10){
-	 			leia (c).
-	 		}
-		}else{
-	 	 	leia (b).
-		}
-	}
-	
-	do{
-		leia (b).
-	}while(1<10).
-	
-	escreva ("C e igual a ").
-	escreva (c).
-	
-	leia (b).
-	
-	escreva ("D e igual a ").
-	escreva (d).
+	declare INTEGER a.
+	a:=1+1.
+	escreva(a).
 
 fimprog.
+

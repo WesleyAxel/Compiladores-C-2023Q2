@@ -145,6 +145,25 @@ public class TypeExpressionParser extends Parser {
 	            throw new RuntimeException("Syntax error: Unassigned Variable" + " [" + name + "] used in expression!");
 	        }
 		}
+		
+		public void marcaVariavel(String name){
+	        Identifier id = symbolTable.get(name);
+	        if (id != null) {
+	            id.setUsed(true);
+	        }
+	    }
+	    
+	    private void verificarVariaveisUtilizadas() {
+	        List<String> variaveisNaoUtilizadas = new ArrayList<>();
+	        for (Identifier id : symbolTable.getSymbols().values()) {
+	            if (!id.isUsed()) {
+	                variaveisNaoUtilizadas.add(id.getText());
+	            }
+	        }
+	        if (!variaveisNaoUtilizadas.isEmpty()) {
+	            throw new RuntimeException("Error: Unused variables: " + variaveisNaoUtilizadas);
+	        }
+	    }
 
 		DataType getExpressionType(String expr) {
 	        if (symbolTable.exists(expr)) {
@@ -321,6 +340,7 @@ public class TypeExpressionParser extends Parser {
 
 										CmdFim _CmdFim = new CmdFim();
 										stack.peek().add(_CmdFim);
+										verificarVariaveisUtilizadas();
 										
 			}
 		}
@@ -882,13 +902,15 @@ public class TypeExpressionParser extends Parser {
 			setState(133);
 			match(ID);
 
-							Identifier id = symbolTable.get(_input.LT(-1).getText());
-							if (id == null){
-								throw new RuntimeException("Syntax error: Cannot write to undeclared variable: [" + _input.LT(-1).getText() + "]!");
-							}
-							DataType dataType = id.getType();
-							CmdRead _read = new CmdRead(id,dataType);
-							stack.peek().add(_read);
+							String variableName = _input.LT(-1).getText();
+			                Identifier id = symbolTable.get(variableName);
+			                if (id == null){
+			                    throw new RuntimeException("Syntax error: Cannot read from undeclared variable: [" + variableName + "]!");
+			                }
+			                DataType dataType = id.getType();
+			                marcaVariavel(variableName); 
+			                CmdRead _read = new CmdRead(id, dataType);
+			                stack.peek().add(_read);
 						 
 			setState(135);
 			match(FP);
@@ -1024,6 +1046,7 @@ public class TypeExpressionParser extends Parser {
 							}
 							leftDT = symbolTable.get(_input.LT(-1).getText()).getType();
 							rightDT = null;
+							marcaVariavel(_input.LT(-1).getText());
 							
 			setState(151);
 			match(ATTR);

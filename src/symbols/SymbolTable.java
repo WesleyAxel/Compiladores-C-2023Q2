@@ -21,14 +21,19 @@ public class SymbolTable {
 	public boolean exists(String key) {
 		return this.symbols.containsKey(key);
 	}
-
+	
 	public HashMap<String, Identifier> getSymbols() {
 		return symbols;
 	}
-
+	
 	public void setSymbols(HashMap<String, Identifier> symbols) {
 		this.symbols = symbols;
 	}
 	
-
+	public void markVariableAsUsed(String variableName) {
+		Identifier id = symbols.get(variableName);
+		if (id != null) {
+			id.setUsed(true);
+		}
+	}
 }

@@ -137,6 +137,25 @@ public class TypeExpressionLexer extends Lexer {
 	            throw new RuntimeException("Syntax error: Unassigned Variable" + " [" + name + "] used in expression!");
 	        }
 		}
+		
+		public void marcaVariavel(String name){
+	        Identifier id = symbolTable.get(name);
+	        if (id != null) {
+	            id.setUsed(true);
+	        }
+	    }
+	    
+	    private void verificarVariaveisUtilizadas() {
+	        List<String> variaveisNaoUtilizadas = new ArrayList<>();
+	        for (Identifier id : symbolTable.getSymbols().values()) {
+	            if (!id.isUsed()) {
+	                variaveisNaoUtilizadas.add(id.getText());
+	            }
+	        }
+	        if (!variaveisNaoUtilizadas.isEmpty()) {
+	            throw new RuntimeException("Error: Unused variables: " + variaveisNaoUtilizadas);
+	        }
+	    }
 
 		DataType getExpressionType(String expr) {
 	        if (symbolTable.exists(expr)) {
