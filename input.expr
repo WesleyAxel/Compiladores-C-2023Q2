@@ -1,8 +1,41 @@
 programa
 
-	declare INTEGER a.
-	a:=1+1.
-	escreva(a).
+	declare INTEGER a,b,c.
+	declare REAL d.	
+	a:=1.	
+	b:=1.	
+	c:=1.
+	d:=2.3.
+	escreva("Programa Teste").
+	
+	escreva ("Digite A").
+	leia (a).
+	
+	escreva ("Digite B").
+	leia (b).
+	if(b==20){
+		escreva("b e igual a  20").
+	}else{
+		escreva("b e diferente de 20").
+	}
+	
+	while(a<=10){
+		escreva ("Digite A").
+		leia(a).
+	}
+	
+	do{
+		escreva ("Digite  B").
+		leia (b).
+	}while(b<10).
+	
+	escreva ("A e igual a ").
+	escreva (a).
+	escreva ("B e igual a ").
+	escreva (b).
+	escreva ("C e igual a ").
+	escreva (c).
+	escreva ("D e igual a ").
+	escreva (d).
 
 fimprog.
-
