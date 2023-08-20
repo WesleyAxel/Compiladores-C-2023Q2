@@ -1,15 +1,13 @@
 programa
 
 	declare INTEGER a,b,c.
-	declare REAL d.
-	declare STRING 4 s.	
+	declare REAL d.	
 	a:=1.	
 	b:=1.	
 	c:=1.
 	d:=2.3.
-	s:= "test".
 	
-	escreva("Programa Teste").
+	escreva("Programa Final").
 	
 	escreva ("Digite A").
 	leia (a).
@@ -40,6 +38,5 @@ programa
 	escreva (c).
 	escreva ("D e igual a ").
 	escreva (d).
-	escreva ("S e igual a ").
-	escreva (s).
+	
 fimprog.

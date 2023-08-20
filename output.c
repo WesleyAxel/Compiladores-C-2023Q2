@@ -4,13 +4,11 @@ int main()
 {
 int a,b,c;
 float d;
-char s[4];
 a=1;
 b=1;
 c=1;
 d=2.3;
-s="test";
-printf("Programa Teste");
+printf("Programa Final");
 printf("Digite A");
 scanf("%d", &a);
 printf("Digite B");
@@ -37,8 +35,6 @@ printf("C e igual a ");
 printf("%d", c);
 printf("D e igual a ");
 printf("%f", d);
-printf("S e igual a ");
-printf("%s", s);
 
 return 0;
 }
