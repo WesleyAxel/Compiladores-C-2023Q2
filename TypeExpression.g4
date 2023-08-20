@@ -9,7 +9,6 @@ grammar TypeExpression;
 	import symbols.SymbolTable;
 	import expressions.*;
 	import ast.*;
-	
 }
 
 @members{
@@ -40,8 +39,30 @@ grammar TypeExpression;
 	public void runInterpreter(){
 		program.run();
 	}
+
+	public void checkId(String name){
+	Identifier id = symbolTable.get(name);
+        if (id == null){
+            throw new RuntimeException("Undeclared Variable" + " " + name);
+        } else if (id.getValue() == null) {
+            throw new RuntimeException("Unassigned Variable" + " " + name);
+        }
+	}
+
+	DataType getExpressionType(String expr) {
+        if (symbolTable.exists(expr)) {
+            return symbolTable.get(expr).getType();
+        } else if (expr.matches("[0-9]+")) {
+            return DataType.INTEGER;
+        } else if (expr.matches("[0-9]+\\.[0-9]+")) {
+            return DataType.REAL;
+        } else if (expr.matches("\".*\"")) {
+            return DataType.STRING;
+        }
+        throw new RuntimeException("Semantic ERROR - Unknown expression type for: " + expr);
+    }
 }
-programa  : inicio decl+ cmd+ fim 
+programa  : inicio (decl)* (cmd)* fim
 			{
 				program.setComandos(stack.pop());
 			}
@@ -88,37 +109,65 @@ cmd		  : cmdAttr | cmdRead | cmdWrite | cmdIf | cmdWhile | cmdDoWhile
 		  ;
 		  
 cmdIf     : 'if' {
-				stack.push(new ArrayList<AbstractCommand>());
-				BinaryExpression _relExpr = new BinaryExpression();				
-				CmdIf _cmdIf = new CmdIf();
-			} 
-			AP expr {
-				_relExpr.setLeftSide(expression);
-			}
-			OPREL {
-				_relExpr.setOperator(_input.LT(-1).getText());
-			} 
-			expr {
-				_relExpr.setRightSide(expression);
-				if (leftDT != rightDT) {
-                    throw new RuntimeException("Semantic ERROR - Type Mismatching: " + leftDT + " - " + rightDT);
+                stack.push(new ArrayList<AbstractCommand>());
+                String _leftExpr = new String();
+                String _rightExpr = new String();
+                String _relExpr = new String();
+                CmdIf _cmdIf = new CmdIf();
+            }
+            AP (
+            REAL
+            |
+            NUMBER
+            |
+            TEXT
+            |
+            ID {_leftExpr = _input.LT(-1).getText(); checkId(_leftExpr);}
+            ) {
+                _leftExpr = "";
+                _leftExpr += _input.LT(-1).getText();
+                _relExpr += _leftExpr;
+            }
+            OPREL {
+                _relExpr += _input.LT(-1).getText();
+            }
+            (
+            REAL
+            |
+            NUMBER
+            |
+            TEXT
+            |
+            ID {_rightExpr = _input.LT(-1).getText(); checkId(_rightExpr);}
+            ) {
+                _rightExpr = "";
+                _rightExpr = _input.LT(-1).getText();
+                _relExpr += _rightExpr;
+
+                DataType leftType = getExpressionType(_leftExpr);
+                DataType rightType = getExpressionType(_rightExpr);
+
+                if (leftType != rightType) {
+                    throw new RuntimeException("Semantic ERROR - Type mismatch in If expression: " + leftType + " != " + rightType);
                 }
-				_cmdIf.setExpr(_relExpr);
-			} FP ACO cmd+  
-			{
-				_cmdIf.setListaTrue(stack.pop());
-					
-			} FCO
-			('else' ACO {
-				stack.push(new ArrayList<AbstractCommand>());
-			}
-			cmd+ FCO)? 
-			{
-				_cmdIf.setListaFalse(stack.pop());
-				stack.peek().add(_cmdIf);
-			}		 
-		  ; 
-		  
+
+                _cmdIf.setExpr(_relExpr);
+            }
+            FP ACO (cmd)+
+            {
+                _cmdIf.setListaTrue(stack.pop());
+                stack.peek().add(_cmdIf);
+            } FCO
+            (
+                'else' ACO {
+                    stack.push(new ArrayList<AbstractCommand>());
+                } (cmd)+ FCO
+                {
+                    _cmdIf.setListaFalse(stack.pop());
+                }
+            )?
+          ;
+
 cmdRead   : 'leia' AP ID {
 				Identifier id = symbolTable.get(_input.LT(-1).getText());
 				if (id == null){
@@ -173,51 +222,104 @@ cmdAttr   : ID {
 				}
 		  ;
 		  
-cmdWhile  : 'while' {
-				stack.push(new ArrayList<AbstractCommand>());
-				BinaryExpression _relExpr = new BinaryExpression();				
-				CmdWhile _CmdWhile = new CmdWhile();
-			} 
-			AP expr {
-				_relExpr.setLeftSide(expression);
-			}
-			OPREL {
-				_relExpr.setOperator(_input.LT(-1).getText());
-			} 
-			expr {
-				_relExpr.setRightSide(expression);
-				if (leftDT != rightDT) {
-                    throw new RuntimeException("Semantic ERROR - Type Mismatching: " + leftDT + " - " + rightDT);
+cmdWhile : 'while' {
+             stack.push(new ArrayList<AbstractCommand>());
+             String _leftExpr = new String();
+             String _rightExpr = new String();
+             String _relExpr = new String();
+             CmdWhile _CmdWhile = new CmdWhile();
+           }
+            AP (
+            REAL
+            |
+            NUMBER
+            |
+            TEXT
+            |
+            ID {_leftExpr = _input.LT(-1).getText(); checkId(_leftExpr);}
+            ) {
+                _leftExpr = "";
+                _leftExpr = _input.LT(-1).getText();
+                _relExpr += _leftExpr;
+            }
+            OPREL {
+                _relExpr += _input.LT(-1).getText();
+            }
+            (
+            REAL
+            |
+            NUMBER
+            |
+            TEXT
+            |
+            ID {_rightExpr = _input.LT(-1).getText(); checkId(_rightExpr);}
+            ) {
+                _rightExpr = "";
+                _rightExpr = _input.LT(-1).getText();
+                _relExpr += _rightExpr;
+
+                DataType leftType = getExpressionType(_leftExpr);
+                DataType rightType = getExpressionType(_rightExpr);
+
+                if (leftType != rightType) {
+                    throw new RuntimeException("Semantic ERROR - Type mismatch in While expression: " + leftType + " != " + rightType);
                 }
-				_CmdWhile.setExpr(_relExpr);
-				
-			} FP ACO (cmd)+ {
-				_CmdWhile.setComandos(stack.pop());
-				stack.peek().add(_CmdWhile);
-			} FCO		  
-		  ;
-		  
+
+                _CmdWhile.setExpr(_relExpr);
+            }
+           FP ACO (cmd)+ {
+             _CmdWhile.setComandos(stack.pop());
+             stack.peek().add(_CmdWhile);
+           } FCO
+         ;
+
 cmdDoWhile  : 'do' {
 					stack.push(new ArrayList<AbstractCommand>());
-					BinaryExpression _relExpr = new BinaryExpression();				
+					String _leftExpr = new String();
+                    String _rightExpr = new String();
+                    String _relExpr = new String();
 					CmdDoWhile _CmdDoWhile = new CmdDoWhile();
 					} ACO (cmd)+ FCO
 			  'while'
-			AP expr {
-				_relExpr.setLeftSide(expression);
-			}
-			OPREL {
-				String text = _input.LT(-1).getText();
-			    _relExpr.setOperator(text);
-			} 
-			expr {
-				_relExpr.setRightSide(expression);
-				if (leftDT != rightDT) {
-                    throw new RuntimeException("Semantic ERROR - Type Mismatching: " + leftDT + " - " + rightDT);
+            AP (
+            REAL
+            |
+            NUMBER
+            |
+            TEXT
+            |
+            ID {_leftExpr = _input.LT(-1).getText(); checkId(_leftExpr);}
+            ) {
+                _leftExpr = "";
+                _leftExpr = _input.LT(-1).getText();
+                _relExpr += _leftExpr;
+            }
+            OPREL {
+                _relExpr += _input.LT(-1).getText();
+            }
+            (
+            REAL
+            |
+            NUMBER
+            |
+            TEXT
+            |
+            ID {_rightExpr = _input.LT(-1).getText(); checkId(_rightExpr);}
+            ) {
+                _rightExpr = "";
+                _rightExpr = _input.LT(-1).getText();
+                _relExpr += _rightExpr;
+
+                DataType leftType = getExpressionType(_leftExpr);
+                DataType rightType = getExpressionType(_rightExpr);
+
+                if (leftType != rightType) {
+                    throw new RuntimeException("Semantic ERROR - Type mismatch in Do While expression: " + leftType + " != " + rightType);
                 }
-				_CmdDoWhile.setExpr(_relExpr);
-				
-			} FP {
+
+                _CmdDoWhile.setExpr(_relExpr);
+            }
+			FP {
 				_CmdDoWhile.setComandos(stack.pop());
 				stack.peek().add(_CmdDoWhile);
 			} PF

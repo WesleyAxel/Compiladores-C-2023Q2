@@ -2,11 +2,9 @@ package ast;
 
 import java.util.List;
 
-import expressions.AbstractExpression;
-
 public class CmdIf extends AbstractCommand{
 
-	private AbstractExpression expr;
+	private String expr;
 	private List<AbstractCommand> listaTrue;
 	private List<AbstractCommand> listaFalse;
 	
@@ -14,16 +12,16 @@ public class CmdIf extends AbstractCommand{
 		super();
 	}
 
-	public CmdIf(AbstractExpression expr) {
+	public CmdIf(String expr) {
 		super();
 		this.expr = expr;
 	}
 
-	public AbstractExpression getExpr() {
+	public String getExpr() {
 		return expr;
 	}
 
-	public void setExpr(AbstractExpression expr) {
+	public void setExpr(String expr) {
 		this.expr = expr;
 	}
 
@@ -35,32 +33,33 @@ public class CmdIf extends AbstractCommand{
 		this.listaTrue = listaTrue;
 	}
 
-	@Override
-	public String generateCode() {
-		// TODO Auto-generated method stub
-		StringBuilder str = new StringBuilder();
-		StringBuilder str2 = new StringBuilder();
-		for (AbstractCommand cmd: listaTrue) {
-			str.append(cmd.generateCode());
-		}
-		if (!listaFalse.isEmpty()) {
-			str2.append("else {\n");
-			for (AbstractCommand cmd: listaFalse) {
-				str2.append(cmd.generateCode());
-			}
-			str2.append("}\n");
-		}
-		return "if (" + expr.toString()+ ") {\n "+ str.toString() + "}\n"+str2.toString();
-	}
-	
-	
-
 	public List<AbstractCommand> getListaFalse() {
 		return listaFalse;
 	}
 
 	public void setListaFalse(List<AbstractCommand> listaFalse) {
 		this.listaFalse = listaFalse;
+	}
+
+	@Override
+	public String generateCode() {
+		// TODO Auto-generated method stub
+		StringBuilder str = new StringBuilder();
+		StringBuilder str2 = new StringBuilder();
+
+		for (AbstractCommand cmd: listaTrue) {
+			str.append(cmd.generateCode());
+		}
+
+		if (listaFalse != null) {
+			str2.append("else {\n");
+			for (AbstractCommand cmd: listaFalse) {
+				str2.append(cmd.generateCode());
+			}
+			str2.append("}\n");
+		}
+
+		return "if (" + expr + ") {\n "+ str + "}\n" + str2;
 	}
 
 	@Override

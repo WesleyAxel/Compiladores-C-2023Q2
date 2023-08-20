@@ -6,14 +6,14 @@ import expressions.AbstractExpression;
 
 public class CmdDoWhile extends AbstractCommand {
 
-    private AbstractExpression expr;
+    private String expr;
     private List<AbstractCommand> comandos;
 
     public CmdDoWhile() {
         super();
     }
 
-    public CmdDoWhile(AbstractExpression expr, List<AbstractCommand> comandos) {
+    public CmdDoWhile(String expr, List<AbstractCommand> comandos) {
         super();
         this.expr = expr;
         this.comandos = comandos;
@@ -24,11 +24,11 @@ public class CmdDoWhile extends AbstractCommand {
         this.comandos = comandos;
     }
 
-    public AbstractExpression getExpr() {
+    public String getExpr() {
         return expr;
     }
 
-    public void setExpr(AbstractExpression expr) {
+    public void setExpr(String expr) {
         this.expr = expr;
     }
 
@@ -47,7 +47,7 @@ public class CmdDoWhile extends AbstractCommand {
         for (AbstractCommand cmd : comandos) {
             code.append(cmd.generateCode());
         }
-        code.append("} while(").append(expr.toString()).append(");\n");
+        code.append("} while (" + expr + "); \n");
         return code.toString();
     }
 

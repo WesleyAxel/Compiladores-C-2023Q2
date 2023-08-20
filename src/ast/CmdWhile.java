@@ -2,28 +2,26 @@ package ast;
 
 import java.util.List;
 
-import expressions.AbstractExpression;
-
 public class CmdWhile extends AbstractCommand {
 
-    private AbstractExpression expr;
+    private String expr;
     private List<AbstractCommand> comandos;
 
     public CmdWhile() {
         super();
     }
 
-    public CmdWhile(AbstractExpression expr, List<AbstractCommand> comandos) {
+    public CmdWhile(String expr, List<AbstractCommand> comandos) {
         super();
         this.expr = expr;
         this.comandos = comandos;
     }
 
-    public AbstractExpression getExpr() {
+    public String getExpr() {
         return expr;
     }
 
-    public void setExpr(AbstractExpression expr) {
+    public void setExpr(String expr) {
         this.expr = expr;
     }
 
@@ -38,7 +36,7 @@ public class CmdWhile extends AbstractCommand {
     @Override
     public String generateCode() {
         StringBuilder code = new StringBuilder();
-        code.append("while (").append(expr.toString()).append(") {\n");
+        code.append("while (" + expr + ") {\n");
         for (AbstractCommand cmd : comandos) {
             code.append(cmd.generateCode());
         }
