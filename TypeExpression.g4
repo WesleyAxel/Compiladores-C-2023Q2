@@ -59,7 +59,7 @@ grammar TypeExpression;
         } else if (expr.matches("\".*\"")) {
             return DataType.STRING;
         }
-        throw new RuntimeException("Semantic error: Unknown expression type for: [" + expr + "]!");
+        return DataType.INTEGER;
     }
 }
 programa  : inicio (decl)* (cmd)* fim
@@ -211,9 +211,14 @@ cmdAttr   : ID {
 				{
 					// logica para atribuir o valor da expressao no identificador
 					Identifier id = symbolTable.get(idAtribuido);
+
+					if(leftDT != getExpressionType(expression.eval())){
+					    throw new RuntimeException("Type mismatch: Assignment with mismatching types!");
+					}
+
 					id.setValue(expression.eval());
 					symbolTable.add(idAtribuido, id);
-					
+
 					System.out.println("EVAL ("+expression+") = "+expression.eval());
 					
 					CmdAttrib _attr = new CmdAttrib(id, expression);
@@ -346,11 +351,11 @@ termo     :  NUMBER
 		  	}
 			| ID {
 				if (!symbolTable.exists(_input.LT(-1).getText())){
-					throw new RuntimeException("Undeclared Identifier: "+_input.LT(-1).getText());
+					throw new RuntimeException("Syntax error: Reference to undeclared variable [" + _input.LT(-1).getText() + "]!");
 				}
 				rightDT = symbolTable.get(_input.LT(-1).getText()).getType();
 				if (leftDT != rightDT){
-					throw new RuntimeException("Type Mismatching " + leftDT + " - " + rightDT);
+					throw new RuntimeException("Type Mismatch: Incompatible types in expression. Cannot perform operation between variables of type [" + leftDT + "] and [" + rightDT + "]!");
 				}					
 				
 				Identifier id = symbolTable.get(_input.LT(-1).getText());
@@ -364,7 +369,7 @@ termo     :  NUMBER
 					}
 				}
 				else{
-					throw new RuntimeException("Reference to unassigned variable");
+					throw new RuntimeException("Syntax error: Reference to unassigned variable [" + _input.LT(-1).getText() + "]!");
 				}
 			}
 		  ;
@@ -377,6 +382,11 @@ exprl     : (SUM | SUB | MUL | DIV) {
 			termo
 			{
 				_exprADD.setRightSide(expression);
+
+				if(getExpressionType(_exprADD.getLeftSide().toString()) != getExpressionType(_exprADD.getRightSide().toString())){
+				    throw new RuntimeException("Type Mismatch: Incompatible types in expression!");
+				}
+
 				expression = _exprADD;
 			}
           ;		         
