@@ -14,6 +14,6 @@ Vitor Inácio da Silva				    11201810048
 
 Wesley Axel de Barros			    	11201722424
 
-## Observação:
+## Observação
 
 É necessário adicionar o arquivo "antlr-4.13.0-complete.jar" ao Build Path e ajustar o apontamento da MainClass nas configurações de execução, para uma compilação sem erros.
