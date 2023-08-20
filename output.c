@@ -2,33 +2,39 @@
 
 int main()
 {
-int a,b,c,d;
-float f;
+int a,b,c;
+float d;
+a=1;
+b=1;
+c=1;
+d=2.3;
 printf("Programa Teste");
 printf("Digite A");
 scanf("%d", &a);
 printf("Digite B");
 scanf("%d", &b);
-a=1;
-while (1>=1) {
-if (1>=1) {
- scanf("%d", &b);
-while (1<10) {
-scanf("%d", &c);
-}
+if (b==20) {
+ printf("b e igual a  20");
 }
 else {
-scanf("%d", &b);
+printf("b e diferente de 20");
 }
+while (a<=10) {
+printf("Digite A");
+scanf("%d", &a);
 }
 do {
+printf("Digite  B");
 scanf("%d", &b);
-} while(1<10);
+} while (b<10); 
+printf("A e igual a ");
+printf("%d", a);
+printf("B e igual a ");
+printf("%d", b);
 printf("C e igual a ");
 printf("%d", c);
-scanf("%d", &b);
 printf("D e igual a ");
-printf("%d", d);
+printf("%f", d);
 
 return 0;
 }

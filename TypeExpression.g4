@@ -16,6 +16,7 @@ grammar TypeExpression;
 	private DataType currentType;
 	private AbstractExpression expression;
 	private String operator;
+	private int currentSize;
 	private DataType leftDT;
 	private DataType rightDT;
 	private String   idAtribuido;
@@ -48,6 +49,25 @@ grammar TypeExpression;
             throw new RuntimeException("Syntax error: Unassigned Variable" + " [" + name + "] used in expression!");
         }
 	}
+	
+	public void marcaVariavel(String name){
+        Identifier id = symbolTable.get(name);
+        if (id != null) {
+            id.setUsed(true);
+        }
+    }
+    
+    private void verificarVariaveisUtilizadas() {
+        List<String> variaveisNaoUtilizadas = new ArrayList<>();
+        for (Identifier id : symbolTable.getSymbols().values()) {
+            if (!id.isUsed()) {
+                variaveisNaoUtilizadas.add(id.getText());
+            }
+        }
+        if (!variaveisNaoUtilizadas.isEmpty()) {
+            throw new RuntimeException("Error: Unused variables: " + variaveisNaoUtilizadas);
+        }
+    }
 
 	DataType getExpressionType(String expr) {
         if (symbolTable.exists(expr)) {
@@ -77,6 +97,7 @@ inicio    : 'programa' {
 fim       : 'fimprog.' {
 							CmdFim _CmdFim = new CmdFim();
 							stack.peek().add(_CmdFim);
+							verificarVariaveisUtilizadas();
 							}
           ;
 		  
@@ -85,7 +106,7 @@ decl	  : 'declare' tipo lista_var PF
 		 
 tipo	  : 'INTEGER' 			{ currentType = DataType.INTEGER; }
           | 'REAL'    			{ currentType = DataType.REAL; }
-          | 'STRING'			{ currentType = DataType.STRING;}
+          | 'STRING' NUMBER		{ currentType = DataType.STRING; currentSize = $NUMBER.int;}
           ;
          
 lista_var : ID  { 
@@ -100,7 +121,7 @@ lista_var : ID  {
    
            		}
            )* {
-           		CmdDeclare _CmdDeclare = new CmdDeclare(listaID,currentType);
+           		CmdDeclare _CmdDeclare = new CmdDeclare(listaID,currentType,currentSize);
 				stack.peek().add(_CmdDeclare);
 			  }
    		  ;
@@ -169,13 +190,15 @@ cmdIf     : 'if' {
           ;
 
 cmdRead   : 'leia' AP ID {
-				Identifier id = symbolTable.get(_input.LT(-1).getText());
-				if (id == null){
-					throw new RuntimeException("Syntax error: Cannot write to undeclared variable: [" + _input.LT(-1).getText() + "]!");
-				}
-				DataType dataType = id.getType();
-				CmdRead _read = new CmdRead(id,dataType);
-				stack.peek().add(_read);
+				String variableName = _input.LT(-1).getText();
+                Identifier id = symbolTable.get(variableName);
+                if (id == null){
+                    throw new RuntimeException("Syntax error: Cannot read from undeclared variable: [" + variableName + "]!");
+                }
+                DataType dataType = id.getType();
+                marcaVariavel(variableName); 
+                CmdRead _read = new CmdRead(id, dataType);
+                stack.peek().add(_read);
 			 }
 			 FP PF
 		  ;		 
@@ -206,6 +229,7 @@ cmdAttr   : ID {
 				}
 				leftDT = symbolTable.get(_input.LT(-1).getText()).getType();
 				rightDT = null;
+				marcaVariavel(_input.LT(-1).getText());
 				}
          	ATTR expr PF
 				{

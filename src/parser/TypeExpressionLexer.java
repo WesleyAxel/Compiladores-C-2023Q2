@@ -9,7 +9,6 @@ package parser;
 	import symbols.SymbolTable;
 	import expressions.*;
 	import ast.*;
-	
 
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
@@ -105,6 +104,7 @@ public class TypeExpressionLexer extends Lexer {
 		private DataType currentType;
 		private AbstractExpression expression;
 		private String operator;
+		private int currentSize;
 		private DataType leftDT;
 		private DataType rightDT;
 		private String   idAtribuido;
@@ -128,6 +128,47 @@ public class TypeExpressionLexer extends Lexer {
 		public void runInterpreter(){
 			program.run();
 		}
+
+		public void checkId(String name){
+		Identifier id = symbolTable.get(name);
+	        if (id == null){
+	            throw new RuntimeException("Syntax error: Undeclared Variable" + " [" + name + "] used in expression!");
+	        } else if (id.getValue() == null) {
+	            throw new RuntimeException("Syntax error: Unassigned Variable" + " [" + name + "] used in expression!");
+	        }
+		}
+		
+		public void marcaVariavel(String name){
+	        Identifier id = symbolTable.get(name);
+	        if (id != null) {
+	            id.setUsed(true);
+	        }
+	    }
+	    
+	    private void verificarVariaveisUtilizadas() {
+	        List<String> variaveisNaoUtilizadas = new ArrayList<>();
+	        for (Identifier id : symbolTable.getSymbols().values()) {
+	            if (!id.isUsed()) {
+	                variaveisNaoUtilizadas.add(id.getText());
+	            }
+	        }
+	        if (!variaveisNaoUtilizadas.isEmpty()) {
+	            throw new RuntimeException("Error: Unused variables: " + variaveisNaoUtilizadas);
+	        }
+	    }
+
+		DataType getExpressionType(String expr) {
+	        if (symbolTable.exists(expr)) {
+	            return symbolTable.get(expr).getType();
+	        } else if (expr.matches("[0-9]+")) {
+	            return DataType.INTEGER;
+	        } else if (expr.matches("[0-9]+\\.[0-9]+")) {
+	            return DataType.REAL;
+	        } else if (expr.matches("\".*\"")) {
+	            return DataType.STRING;
+	        }
+	        throw new RuntimeException("Semantic error: Unknown expression type for: [" + expr + "]!");
+	    }
 
 
 	public TypeExpressionLexer(CharStream input) {
