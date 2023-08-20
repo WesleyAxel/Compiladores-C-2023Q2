@@ -43,9 +43,9 @@ grammar TypeExpression;
 	public void checkId(String name){
 	Identifier id = symbolTable.get(name);
         if (id == null){
-            throw new RuntimeException("Undeclared Variable" + " " + name);
+            throw new RuntimeException("Syntax error: Undeclared Variable" + " [" + name + "] used in expression!");
         } else if (id.getValue() == null) {
-            throw new RuntimeException("Unassigned Variable" + " " + name);
+            throw new RuntimeException("Syntax error: Unassigned Variable" + " [" + name + "] used in expression!");
         }
 	}
 
@@ -59,7 +59,7 @@ grammar TypeExpression;
         } else if (expr.matches("\".*\"")) {
             return DataType.STRING;
         }
-        throw new RuntimeException("Semantic ERROR - Unknown expression type for: " + expr);
+        throw new RuntimeException("Semantic error: Unknown expression type for: [" + expr + "]!");
     }
 }
 programa  : inicio (decl)* (cmd)* fim
@@ -148,7 +148,7 @@ cmdIf     : 'if' {
                 DataType rightType = getExpressionType(_rightExpr);
 
                 if (leftType != rightType) {
-                    throw new RuntimeException("Semantic ERROR - Type mismatch in If expression: " + leftType + " != " + rightType);
+                    throw new RuntimeException("Type mismatch: Incompatible types for If expression comparison. Cannot compare [" + leftType + "] to [" + rightType + "]!");
                 }
 
                 _cmdIf.setExpr(_relExpr);
@@ -171,7 +171,7 @@ cmdIf     : 'if' {
 cmdRead   : 'leia' AP ID {
 				Identifier id = symbolTable.get(_input.LT(-1).getText());
 				if (id == null){
-					throw new RuntimeException("Undeclared Variable");
+					throw new RuntimeException("Syntax error: Cannot write to undeclared variable: [" + _input.LT(-1).getText() + "]!");
 				}
 				DataType dataType = id.getType();
 				CmdRead _read = new CmdRead(id,dataType);
@@ -184,7 +184,7 @@ cmdWrite  : 'escreva' AP (
 	         ID {
 	         	Identifier id = symbolTable.get(_input.LT(-1).getText());
 	         	if (id == null){
-	         		throw new RuntimeException("Undeclared Variable");	         		
+	         		throw new RuntimeException("Syntax error: Cannot read undeclared Variable: [" + _input.LT(-1).getText() + "]!");
 	         	}
 	         	DataType dataType = id.getType();
 	         	CmdWrite _write = new CmdWrite(id,dataType);
@@ -202,7 +202,7 @@ cmdWrite  : 'escreva' AP (
 cmdAttr   : ID {
 				idAtribuido = _input.LT(-1).getText();
 				if (!symbolTable.exists(_input.LT(-1).getText())){
-					throw new RuntimeException("Semantic ERROR - Undeclared Identifier");
+					throw new RuntimeException("Syntax error: Undeclared variable assignment. Variable [" + _input.LT(-1).getText() + "] has not been declared!");
 				}
 				leftDT = symbolTable.get(_input.LT(-1).getText()).getType();
 				rightDT = null;
@@ -262,7 +262,7 @@ cmdWhile : 'while' {
                 DataType rightType = getExpressionType(_rightExpr);
 
                 if (leftType != rightType) {
-                    throw new RuntimeException("Semantic ERROR - Type mismatch in While expression: " + leftType + " != " + rightType);
+                    throw new RuntimeException("Type mismatch: Incompatible types for While expression comparison. Cannot compare [" + leftType + "] to [" + rightType + "]!");
                 }
 
                 _CmdWhile.setExpr(_relExpr);
@@ -314,7 +314,7 @@ cmdDoWhile  : 'do' {
                 DataType rightType = getExpressionType(_rightExpr);
 
                 if (leftType != rightType) {
-                    throw new RuntimeException("Semantic ERROR - Type mismatch in Do While expression: " + leftType + " != " + rightType);
+                    throw new RuntimeException("Type mismatch: Incompatible types for Do While expression comparison. Cannot compare [" + leftType + "] to [" + rightType + "]!");
                 }
 
                 _CmdDoWhile.setExpr(_relExpr);
@@ -346,25 +346,25 @@ termo     :  NUMBER
 		  	}
 			| ID {
 				if (!symbolTable.exists(_input.LT(-1).getText())){
-					throw new RuntimeException("Semantic ERROR - Undeclared Identifier: "+_input.LT(-1).getText());
+					throw new RuntimeException("Undeclared Identifier: "+_input.LT(-1).getText());
 				}
 				rightDT = symbolTable.get(_input.LT(-1).getText()).getType();
 				if (leftDT != rightDT){
-					throw new RuntimeException("Semantic ERROR - Type Mismatching "+leftDT+ "-"+rightDT);
+					throw new RuntimeException("Type Mismatching " + leftDT + " - " + rightDT);
 				}					
 				
 				Identifier id = symbolTable.get(_input.LT(-1).getText());
 				if (id.getValue() != null){
-					if 		  (rightDT == DataType.INTEGER) {
-						expression = new NumberExpression(id.getValue());
+					if 	(rightDT == DataType.INTEGER) {
+						expression = new NumberExpression(id.getText());
 					} else if (rightDT == DataType.REAL) {
-						expression = new RealExpression(id.getValue());
+						expression = new RealExpression(id.getText());
 					} else if (rightDT == DataType.STRING) {
-						expression = new StringExpression(id.getValue());
+						expression = new StringExpression(id.getText());
 					}
 				}
 				else{
-					throw new RuntimeException("Semantic ERROR - Unassigned variable");
+					throw new RuntimeException("Reference to unassigned variable");
 				}
 			}
 		  ;
