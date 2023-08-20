@@ -1,7 +1,7 @@
 programa
 
 	declare INTEGER a,b,c,d.
-	declare REAL f.
+	declare STRING 5 f,v.
 	escreva("Programa Teste").
 	escreva ("Digite A").
 	leia (a).

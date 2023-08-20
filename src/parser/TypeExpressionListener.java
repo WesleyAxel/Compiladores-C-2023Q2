@@ -9,7 +9,6 @@ package parser;
 	import symbols.SymbolTable;
 	import expressions.*;
 	import ast.*;
-	
 
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 

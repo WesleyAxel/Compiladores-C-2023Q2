@@ -16,6 +16,7 @@ grammar TypeExpression;
 	private DataType currentType;
 	private AbstractExpression expression;
 	private String operator;
+	private int currentSize;
 	private DataType leftDT;
 	private DataType rightDT;
 	private String   idAtribuido;
@@ -85,7 +86,7 @@ decl	  : 'declare' tipo lista_var PF
 		 
 tipo	  : 'INTEGER' 			{ currentType = DataType.INTEGER; }
           | 'REAL'    			{ currentType = DataType.REAL; }
-          | 'STRING'			{ currentType = DataType.STRING;}
+          | 'STRING' NUMBER		{ currentType = DataType.STRING; currentSize = $NUMBER.int;}
           ;
          
 lista_var : ID  { 
@@ -100,7 +101,7 @@ lista_var : ID  {
    
            		}
            )* {
-           		CmdDeclare _CmdDeclare = new CmdDeclare(listaID,currentType);
+           		CmdDeclare _CmdDeclare = new CmdDeclare(listaID,currentType,currentSize);
 				stack.peek().add(_CmdDeclare);
 			  }
    		  ;
