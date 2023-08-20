@@ -69,18 +69,31 @@ grammar TypeExpression;
         }
     }
 
-	DataType getExpressionType(String expr) {
-        if (symbolTable.exists(expr)) {
-            return symbolTable.get(expr).getType();
-        } else if (expr.matches("[0-9]+")) {
-            return DataType.INTEGER;
-        } else if (expr.matches("[0-9]+\\.[0-9]+")) {
-            return DataType.REAL;
-        } else if (expr.matches("\".*\"")) {
-            return DataType.STRING;
-        }
+DataType getExpressionType(String expr) {
+    if (symbolTable.exists(expr)) {
+        return symbolTable.get(expr).getType();
+    } else if (expr.matches("[0-9]+")) {
         return DataType.INTEGER;
+    } else if (expr.matches("[0-9]+\\.[0-9]+")) {
+        return DataType.REAL;
+    } else if (expr.matches("\".*\"")) {
+        return DataType.STRING;
+    } else if (expr.contains("+") || expr.contains("-") || expr.contains("*") || expr.contains("/")) {
+        String[] terms = expr.split("\\+|-|\\*|/");
+        if (terms.length >= 2) {
+            DataType resultType = getExpressionType(terms[0].trim());
+            for (int i = 1; i < terms.length; i++) {
+                DataType termType = getExpressionType(terms[i].trim());
+                if (resultType != termType) {
+                    throw new RuntimeException("Type mismatch: Expression with terms with mismatching types!");
+                }
+            }
+            return resultType;
+        }
     }
+    throw new RuntimeException("Semantic error: Unknow expression!");
+}
+
 }
 programa  : inicio (decl)* (cmd)* fim
 			{
